@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="571820ca-8be0-462d-a50e-7d1ee67f54a5" name="accounting.ozinc.info" url="https://accouning.ozinc.info">
+        <fileTransfer rootFolder="/home/forge/accounting.ozinc.info" accessType="SFTP" host="165.227.4.200" port="22" sshConfigId="af6c8e96-73f8-447a-92d6-2ca4f14ca702" sshConfig="forge@165.227.4.200:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
