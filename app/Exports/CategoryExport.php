@@ -1,34 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Exports;
 
-use App\Exports\CategoryExport;
 use App\Models\SaleInvoice;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CategoryTotalsController extends Controller
+class CategoryExport implements FromView, ShouldAutoSize, WithHeadingRow
 {
-    public function index1()
+    public function __construct($from, $to)
     {
-        $now = Carbon::now();
-        $start = new Carbon('first day of last month');
-        $end = new Carbon('last day of last month');
-
-        $start = $start->format("m-d-Y");
-        $end = $end->format("m-d-Y");
-        return view('category.start', compact('start', 'end'));
+        $this->from = $from;
+        $this->to = $to;
     }
 
-    public function index2(Request $request)
+    public function view(): View
     {
-        //  dd($request);
-        $start = $request->get('start');
-        $end = $request->get('end');
-        $from = substr($start, 6, 4) . '-' . substr($start, 0, 5) . ' 00:00:00';
-        $to = substr($end, 6, 4) . '-' . substr($end, 0, 5) . ' 23:59:59';
-        //   dd($from);
+        $from = substr($this->from, 6, 4) . '-' . substr($this->from, 0, 5) . ' 00:00:00';
+        $to = substr($this->to, 6, 4) . '-' . substr($this->to, 0, 5) . ' 23:59:59';
+
+
         $all_categories = SaleInvoice::select('category_full', 'cat_sub1', 'cat_sub2', 'cat_sub3', 'cat_sub4', 'amt_invoiced')
             ->orderby('category_full')->groupBy('category_full')->whereNotNull('category_full')
             ->whereBetween('order_date_stamped', [$from, $to])
@@ -130,15 +123,6 @@ class CategoryTotalsController extends Controller
             ->whereBetween('order_date_stamped', [$from, $to])
             ->sum('amount');
 
-        //  dd($total_amt_invoiced);
-        //    dd($results);
-        return view('category.totals', compact('results', 'start', 'end'));
+        return view('export.category', ['results' => $results, 'from' => $from, 'to' => $to]);
     }
-
-    function export_category_totals($from, $to)
-    {
-       // dd($from . $to);
-        return Excel::download(new CategoryExport($from, $to), 'totals_per_category.xlsx');
-    }
-
 }

@@ -12,9 +12,10 @@ use App\Http\Controllers\CategoryTotalsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
-Route::get('start1',  [CategoryTotalsController::class, 'index1'])->name('start1');
+});*/
+Route::get('/',  [CategoryTotalsController::class, 'index1'])->name('start1');
 Route::get('start2',  [CategoryTotalsController::class, 'index2'])->name('start2');
+Route::any('totals/{start}/{end}', [CategoryTotalsController::class,'export_category_totals'])->name('totals');
 

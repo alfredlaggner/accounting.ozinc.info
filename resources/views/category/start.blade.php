@@ -5,9 +5,10 @@
     <div class="container">
         <div class="card">
             <div class='card-header'>
-                <h5>Enter Time Span </h5>
+                <h5>Sales per Category </h5>
             </div>
             <div class="card card-body">
+                <h6>Enter From To</h6>
                 <form method="get" action="{{route('start2')}}">
                     @csrf
                     <input id="start" name="start" type="text" value="{{$start}}">

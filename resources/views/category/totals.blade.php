@@ -2,11 +2,17 @@
 @section('title', 'Initialize Monthly Bonus')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="card">
             <div class='card-header'>
                 <h4>Category Totals </h4>
-                <h6>From {{$from}} to {{$to}}</h6>
+                <h6>From {{$start}} to {{$end}}</h6>
+                <div class="col-auto">
+                    <a class="btn btn-success" href="{{route('totals',[$start,$end])}}">
+                        Export to Excel
+                    </a>
+                </div>
+
             </div>
             <div class="card card-body">
                 @if (session('status'))
@@ -29,6 +35,8 @@
                         <th>Total</th>
                         <th>Category</th>
                         <th>Total</th>
+                        <th>Category</th>
+                        <th>Total</th>
                         </thead>
                         <tbody>
                         @foreach ($results as $result)
@@ -38,7 +46,7 @@
                             <tr>
                                 <td>{{$result[0]}}</td>
 
-                                @for ($i=1; $i <= 5;$i++)
+                                @for ($i=1; $i <= 6;$i++)
                                     @if ($i  < count($result))
                                         <td class="text-xl-left">{{$result[$i][0]}}</td>
                                         <td class="text-xl-right">{{number_format($result[$i][1],2)}}</td>
