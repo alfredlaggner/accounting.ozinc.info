@@ -2,14 +2,14 @@
 
 namespace App\Imports;
 
-use App\MetrcTag;
+use App\Models\Simplicity;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MetrcTagsCollection implements ToCollection, WithHeadingRow
+class SimplicityCollection implements ToCollection, WithHeadingRow
 {
     /**
      * @param Collection $collection
@@ -17,16 +17,19 @@ class MetrcTagsCollection implements ToCollection, WithHeadingRow
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            MetrcTag::updateOrCreate(
+            Simplicity::updateOrCreate(
                 [
-                'tag' => $row['tag']
+                    'internal_case_id' => $row['internal_case_id']
                 ],
-                ['type' => $row['type'],
-                    'status' => $row['status'],
-                    'commissioned' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['commissioned']),
+                [
+                    'debtor_company' => $row['debtor_company_name'],
+                    'internal_case_id' => $row['internal_case_id'],
+                    'internal_debtor_id' => $row['internal_debtor_id'],
+                    'case_number' => $row['case_number'],
                 ]);
         }
     }
+
     public function chunkSize(): int
     {
         return 100;

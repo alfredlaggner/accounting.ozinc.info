@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\MetrcTagsCollection;
+use App\Imports\SimplicityCollection;
 use App\MetrcTag;
+use App\Models\Simplicity;
+use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SimplicityController extends Controller
 {
     function Start(Request $request)
     {
+
         $now = Carbon::now();
         $start = new Carbon('first day of last month');
         $end = new Carbon('last day of last month');
@@ -24,14 +28,38 @@ class SimplicityController extends Controller
     public function import_tags(Request $request)
     {
         $request->validate(['import_file' => 'required']);
-      //  dd($request);
-     //   dd($request->file('import_file'));
+        //  dd($request);
+        //   dd($request->file('import_file'));
         $path1 = $request->file('import_file')->store('temp');
         $path = storage_path('app') . '/' . $path1;
-      //  dd($path);
-    //    DB::table('metrc_tags')->delete();
-        Excel::import(new MetrcTagsCollection, $path);
+        //  dd($path);
+        //    DB::table('metrc_tags')->delete();
+        Excel::import(new SimplicityCollection, $path);
+        $count = 0;
+        $count = $this->update_costomers();
+        return redirect('/')->with('status', $count . ' debitors imported!');
+    }
 
-        return redirect('/')->with('status', 'Tags imported!');
+    public function update_costomers()
+    {
+        $customers = Customer::get();
+        $count = 0;
+        foreach ($customers as $customer) {
+
+            $sim = Simplicity::where('deptor_company', 'like', trim($customer->name))->first();
+            if ($sim) {
+                $count++;
+                //        echo $customer->name . $sim->debtor_company . " " .$sim->internal_case_id.  ' ' . $sim->internal_debtor_id . "<br>";;
+                $customer->internal_case_id = $sim->internal_case_id;
+                $customer->internal_debtor_id = $sim->internal_debtor_id;
+                $customer->debtor_company = $sim->deptor_company;
+                $customer->case_number = $sim->case_number;
+                $customer->save();
+
+                $sim->found = true;
+                $sim->save();
+            }
+        }
+        return ($count);
     }
 }
