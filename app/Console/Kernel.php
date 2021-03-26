@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\import_simplicity',
+        'App\Console\Commands\simAddAccounts',
     ];
 
     /**
@@ -25,6 +26,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        date_default_timezone_set('America/Los_Angeles');
+
+        $schedule->command('sim:import')->daily()->withoutOverlapping()->appendOutputTo(storage_path('sim_import.log'));
+
     }
 
     /**

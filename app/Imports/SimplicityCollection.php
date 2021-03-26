@@ -17,16 +17,17 @@ class SimplicityCollection implements ToCollection, WithHeadingRow
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
+
             Simplicity::updateOrCreate(
                 [
-                    'internal_case_id' => $row['internal_case_id']
+                    'license' => $row['license']
                 ],
                 [
                     'debtor_company' => $row['debtor_company_name'],
-                    'internal_case_id' => $row['internal_case_id'],
                     'internal_debtor_id' => $row['internal_debtor_id'],
-                    'case_number' => $row['case_number'],
+                    'license' => $row['license']
                 ]);
+
         }
     }
 

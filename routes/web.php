@@ -19,6 +19,7 @@ use App\Http\Controllers\SimplicityController;
 Route::get('/',  [SimplicityController::class, 'start'])->name('start');
 Route::get('import_simplicity', [SimplicityController::class, 'index'])->name('import_simplicity');
 Route::post('do_import', [SimplicityController::class ,'import_tags'])->name('do_import');
+Route::get('files',  [SimplicityController::class, 'import_simplicity'])->name('files.list');
 
 Route::get('start2',  [CategoryTotalsController::class, 'index2'])->name('start2');
 Route::any('totals/{start}/{end}', [CategoryTotalsController::class,'export_category_totals'])->name('totals');

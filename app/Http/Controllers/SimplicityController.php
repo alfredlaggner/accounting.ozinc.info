@@ -9,6 +9,7 @@ use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class SimplicityController extends Controller
 {
@@ -25,6 +26,7 @@ class SimplicityController extends Controller
         return view('accounting', compact('start', 'end'));
     }
 
+
     public function import_tags(Request $request)
     {
         $request->validate(['import_file' => 'required']);
@@ -40,20 +42,32 @@ class SimplicityController extends Controller
         return redirect('/')->with('status', $count . ' debitors imported!');
     }
 
+    public function import_simplicity()
+    {
+        $files = scandir(storage_path('app/public/simplicity'), SCANDIR_SORT_DESCENDING);
+        $newest_file = $files[0];
+        $path = storage_path('app/public/simplicity/') . $newest_file;
+        Excel::import(new SimplicityCollection, $path);
+        $count = 0;
+        $count = $this->update_costomers();
+        return redirect('/')->with('status', $count . ' debitors imported!');
+    }
+
     public function update_costomers()
     {
         $customers = Customer::get();
         $count = 0;
         foreach ($customers as $customer) {
 
-            $sim = Simplicity::where('deptor_company', 'like', trim($customer->name))->first();
+            $sim = Simplicity::where('license', 'like', trim($customer->license))->first();
             if ($sim) {
                 $count++;
+                echo $sim->deptor_company . '<br>';
                 //        echo $customer->name . $sim->debtor_company . " " .$sim->internal_case_id.  ' ' . $sim->internal_debtor_id . "<br>";;
-                $customer->internal_case_id = $sim->internal_case_id;
+            //    $customer->internal_case_id = $sim->internal_case_id;
                 $customer->internal_debtor_id = $sim->internal_debtor_id;
                 $customer->debtor_company = $sim->deptor_company;
-                $customer->case_number = $sim->case_number;
+            //    $customer->case_number = $sim->case_number;
                 $customer->save();
 
                 $sim->found = true;

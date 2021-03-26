@@ -12,6 +12,7 @@ class Simplicity extends Model
         'debtor_company_name',
         'internal_case_id',
         'internal_debtor_id',
-        'case_number'
+        'case_number',
+        'license'
     ];
 }
