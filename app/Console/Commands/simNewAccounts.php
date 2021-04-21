@@ -14,7 +14,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 
-class simAddAccounts extends Command
+class simNewAccounts extends Command
 {
     /**
      * The name and signature of the console command.
@@ -85,7 +85,7 @@ class simAddAccounts extends Command
                     "DebtorEmail" => $email,
                     "DebtorCompanyName" => $customer->display_name,
                     "DebtorPhone" => $customer->phone,
-                    "OriginalAmount" => $customer->total_overdue,
+                    "OriginalAmount" => $customer->total_due,
                     "AccountCustomFields" => [
                         [
                             "FieldName" => "License",

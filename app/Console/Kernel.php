@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\import_simplicity',
-        'App\Console\Commands\simAddAccounts',
+        'App\Console\Commands\simNewAccounts',
     ];
 
     /**
