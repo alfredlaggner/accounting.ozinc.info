@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryTotalsController;
 use App\Http\Controllers\SimplicityController;
 use App\Http\Controllers\InvoiceDueController;
+use App\Http\Controllers\CustomerLicenseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,3 +27,4 @@ Route::get('start2',  [CategoryTotalsController::class, 'index2'])->name('start2
 Route::any('totals/{start}/{end}', [CategoryTotalsController::class,'export_category_totals'])->name('totals');
 
 Route::get('due',  [InvoiceDueController::class, 'index'])->name('invoice.due');
+Route::get('license',[CustomerLicenseController::class, 'index'])->name('license.index');
